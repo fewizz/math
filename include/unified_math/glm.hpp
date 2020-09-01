@@ -16,7 +16,7 @@ T get(glm::vec<L, T, Q>&& vec ) {
     return vec[I];
 }
 
-template<glm::size_t L, class T, glm::qualifier Q>
+template<glm::length_t L, class T, glm::qualifier Q>
 struct tuple_size<glm::vec<L, T, Q>> : std::integral_constant<std::size_t, L> { };
 
 }
