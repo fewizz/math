@@ -92,31 +92,32 @@ template<class T, std::size_t S>
 static constexpr bool has_same_gets_for_size_v =
     internal::check_range_for<has_same_gets_for_indicies, T, S>::value;
 
-template<class T, std::size_t N, class E>
+template<class T, std::size_t S, class E>
 class is_vec {
-    template<bool=has_tuple_size_v<T> and has_gets_for_size_v<T, N>,class...>
+    template<bool=has_tuple_size_v<T> and has_gets_for_size_v<T, S>,class...>
     struct a:std::integral_constant<bool,false>{};
     
     template<class...U> struct a<true,U...>
     :std::integral_constant<
         bool,
-        has_same_gets_for_size_v<T, N> and
+        has_same_gets_for_size_v<T, S> and
         std::is_same_v<std::decay_t<decltype(std::get<0>(std::declval<T>()))>, E>
     >{};
 
     template<class...R>
     static constexpr bool b() {
-        if constexpr(sizeof...(R) != N) return b<E, R...>();
+        if constexpr(sizeof...(R) != S) return b<E, R...>();
         else return std::is_constructible_v<T, R...>;
     }
 public:
     static constexpr bool value =
         a<>::value and b<>()
-        and sizeof(T) == N*sizeof(E);
+        and sizeof(T) == S*sizeof(E)
+        and std::is_arithmetic_v<E>;
 };
 
-template<class T, std::size_t N, class E>
-static constexpr bool is_vec_v = is_vec<T, N, E>::value;
+template<class T, std::size_t S, class E>
+static constexpr bool is_vec_v = is_vec<T, S, E>::value;
 
 template<class T>
 class is_any_vec {
@@ -137,4 +138,11 @@ public:
 
 template<class T>
 static constexpr bool is_any_vec_v = is_any_vec<T>::value;
+
+template<class T, std::size_t S, class E>
+concept vec = is_vec_v<T, S, E>;
+
+template<class T>
+concept any_vec = is_any_vec_v<T>;
+
 }

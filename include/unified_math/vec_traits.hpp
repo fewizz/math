@@ -1,20 +1,18 @@
 #pragma once
 
+#include <bits/c++config.h>
+#include <utility>
+#include "vec.hpp"
+
 namespace uni {
 
-template<class T>
+template<class T, bool=is_any_vec_v<T> >
 struct vec_traits;
 
-template<unsigned D, class E>
-struct vec_traits_specialiser {
-    static constexpr unsigned dimension = D;
-    using element_type = E;
-};
-
 template<class T>
-concept has_vec_traits = requires {
-    vec_traits<T>::dimension;
-    typename vec_traits<T>::element_type;
+struct vec_traits<T, true> {
+    static constexpr std::size_t dimension = std::tuple_size_v<T>;
+    using element_type = invoke_result_of_get_t<T, 0>;
 };
 
 }
