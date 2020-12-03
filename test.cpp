@@ -10,7 +10,7 @@
 using namespace uni;
 using namespace std;
 
-void exec(vector<string> args) {
+int main() {
     static_assert(!is_vec_v<int, 2, int>);
     static_assert(is_vec_v<pair<int, int>, 2, int>);
     static_assert(!is_vec_v<std::pair<int, int>, 2, float>);

@@ -9,7 +9,6 @@ To convert(From from, Ts... ts) {
     if constexpr(sizeof...(Ts) != vec_traits<From>::dimension)
         return convert<To>(from, ts..., (typename vec_traits<From>::element_type) {} );
     else return To{ts...};
-
 }
 
 }
