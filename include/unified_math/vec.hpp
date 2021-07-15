@@ -1,126 +1,70 @@
 #pragma once
 
-#include <bits/c++config.h>
-#include <corecrt.h>
-#if __has_include("glm/detail/qualifier.hpp")
-    #include "glm.hpp"
-#endif
+//#if __has_include("glm/detail/qualifier.hpp")
+#include "glm.hpp"
+//#endif
 
 #include <cstddef>
 #include <type_traits>
 #include <utility>
 #include <concepts>
 #include <tuple>
-#include <experimental/type_traits>
 #include <limits>
 
 namespace uni {
 
-template<class T>
-static constexpr bool has_tuple_size_v = std::experimental::is_detected_v<std::tuple_size, T>;
+template<typename T, std::size_t Index>
+concept has_get_for_index = requires(T& t) {
+	get<Index>(t);
+};
 
-template<class T, std::size_t I>
-using invoke_result_of_get_t = decltype(std::get<I>( std::declval<T>() ));
+template<typename T>
+inline constexpr std::size_t size = std::tuple_size_v<T>;
+
+template<typename T>
+concept has_size = requires {
+	typename std::tuple_size<T>::type;
+};
+
+template<typename T, std::size_t Index>
+using get_type = decltype(get<Index>(std::declval<T&>()));
+
+template<typename T, std::size_t Index>
+using get_type_decayed = std::decay_t<decltype(get<Index>(std::declval<T&>()))>;
 
 namespace internal {
-    template<std::size_t I>
-    struct for_index {
-        template<class T0>
-        using get_t = decltype(std::get<I>( std::declval<T0>() ));
-    };
-}
+	template<typename T, std::size_t Index = 1>
+	requires(has_get_for_index<T, 0>)
+	consteval bool has_same_types() {
+		if constexpr(Index < size<T>) {
+			if constexpr(std::is_same_v<get_type<T, 0>, get_type<T, Index>>) {
+				return has_same_types<T, Index + 1>();
+			}
+		}
+		else return true;
 
-template<class T, std::size_t I>
-static constexpr bool has_get_for_index() {
-    return std::experimental::is_detected_v<internal::for_index<I>::template get_t, T>;
-}
+		return false;
+	}
+};
 
-template<class T, std::size_t... Is>
-static constexpr bool has_gets_for_indicies() {
-    return (has_get_for_index<T, Is>() && ...);
-}
+template<typename T>
+concept any_vec =
+	has_size<T>
+	&& size<T> > 0
+	&& sizeof(T) == size<T> * sizeof(get_type_decayed<T, 0>)
+	&& internal::has_same_types<T>();
 
-template<class T, std::size_t... Indexes>
-static constexpr bool has_gets_for_indicies(std::index_sequence<Indexes...>) {
-    return has_gets_for_indicies<T, Indexes...>();
-}
+template<typename T, std::size_t S>
+concept vec_of_size =
+	any_vec<T>
+	&& size<T> == S;
 
-template<class T, std::size_t I>
-static constexpr bool has_same_gets_for_indicies() {
-    return has_get_for_index<T, I>();
-}
+template<typename T, typename E>
+concept vec_of_type =
+	any_vec<T>
+	&& std::is_same_v<get_type_decayed<T, 0>, E>;
 
-template<class T, std::size_t I0, std::size_t I1, std::size_t... Is>
-static constexpr bool has_same_gets_for_indicies() {
-    if constexpr(has_get_for_index<T, I0>() && has_get_for_index<T, I1>()) {
-        return std::is_same_v<
-            invoke_result_of_get_t<T, I0>,
-            invoke_result_of_get_t<T, I1>
-        > and has_same_gets_for_indicies<T, I1, Is...>();
-    }
-    return false;
-}
-
-template<class T, std::size_t... Indexes>
-static constexpr bool has_same_gets_for_indicies(std::index_sequence<Indexes...>) {
-    return has_same_gets_for_indicies<T, Indexes...>();
-}
-
-template<class T, std::size_t S>
-static constexpr bool has_gets_for_size() {
-    return has_gets_for_indicies<T>(std::make_index_sequence<S>());
-}
-
-template<class T, std::size_t S>
-static constexpr bool has_same_gets_for_size() {
-    return has_same_gets_for_indicies<T>(std::make_index_sequence<S>());
-}
-
-template<class T, class N, std::size_t S, class...Args>
-static constexpr bool is_constructible_from_n_same_args() {
-    if constexpr(sizeof...(Args) != S)
-        return is_constructible_from_n_same_args<T, N, S, Args..., N>();
-    return std::is_constructible_v<T, Args...>;
-}
-
-template<class T, std::size_t S, class E>
-static constexpr bool is_vec() {
-    if constexpr(has_same_gets_for_size<T, S>()) {
-        using decayed_get_0 = std::decay_t<decltype(std::get<0>(std::declval<T>()))>;
-
-        return
-            std::is_same_v<decayed_get_0, E>
-            and
-            is_constructible_from_n_same_args<T, E, S>()
-            and
-            sizeof(T) == S*sizeof(E)
-            and
-            std::is_arithmetic_v<E>;
-    }
-    return false;
-}
-
-template<class T, std::size_t S, class E>
-static constexpr bool is_vec_v = is_vec<T, S, E>();
-
-template<class T>
-static constexpr bool is_any_vec() {
-    if constexpr(has_get_for_index<T, 0>()) {
-        using decayed_get_0 = std::decay_t<decltype(std::get<0>(std::declval<T>()))>;
-
-        return is_vec<T, sizeof(T)/sizeof(decayed_get_0), decayed_get_0>();
-    }
-
-    return false;
-}
-
-template<class T>
-static constexpr bool is_any_vec_v = is_any_vec<T>();
-
-template<class T, std::size_t S, class E>
-concept vec = is_vec_v<T, S, E>;
-
-template<class T>
-concept any_vec = is_any_vec_v<T>;
+template<typename T, std::size_t S, class E>
+concept vec = vec_of_size<T, S> && vec_of_type<T, E>;
 
 }
