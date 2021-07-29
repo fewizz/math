@@ -4,24 +4,21 @@ $CXX --config ./compile_flags.txt -o /tmp/test test.cpp
 exit
 #endif
 
-#include <glm/ext/vector_float2.hpp>
 #include <vector>
 #include <string>
 #include <assert.h>
 
-#include "include/unified_math/vec.hpp"
-#include "glm/vec2.hpp"
-#include "include/unified_math/to.hpp"
-
-using namespace uni;
-using namespace std;
+#include "math/vector.hpp"
+#include <glm/vec2.hpp>
 
 int main() {
-	static_assert(has_get_for_index<std::pair<int, int>, 0>);
-	static_assert(!vec<int, 2, int>);
-	static_assert(vec<pair<int, int>, 2, int>);
-	static_assert(!vec<std::pair<int, int>, 2, float>);
-	static_assert(vec<glm::vec2, 2, float>);
+	using namespace std;
+
+	//static_assert(has_get_for_index<std::pair<int, int>, 0>);
+	static_assert(!math::vector<int>);
+	static_assert(math::vector<pair<int, int>, int, int>);
+	static_assert(!math::vector<std::pair<int, int>, float, float>);
+	static_assert(math::vector<glm::vec2, float, float>);
 	static_assert(vec<tuple<double, double, double, double>, 4, double>);
 	static_assert(any_vec<tuple<char, char>>);
 	static_assert(any_vec<pair<float, float>>);
