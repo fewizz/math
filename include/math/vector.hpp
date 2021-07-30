@@ -2,11 +2,16 @@
 
 #include <cinttypes>
 #include <concepts>
+#include <cstddef>
+#include <iterator>
 #include <tuple>
+#include <type_traits>
+#include <cmath>
 
 namespace math {
 
 namespace internal {
+	// std tuple-like
 	template<typename T, std::size_t Index>
 	concept has_get_for_index = requires(const T& t) {
 		get<Index>(t);
@@ -16,14 +21,14 @@ namespace internal {
 	constexpr bool has_get_for_indexes_up_to() {
 		if constexpr(has_get_for_index<T, Index>) {
 			if constexpr(Index == 0) return true;
-			else return has_get_for_indexes_up_to<T, Index - 1>;
+			else return has_get_for_indexes_up_to<T, Index - 1>();
 		}
 		return false;
 	}
 
 	template<typename T>
 	concept has_tuple_size = requires {
-		{ std::tuple_size<T>::value } -> std::integral;
+		std::tuple_size<std::remove_reference_t<T>>::value;
 	};
 
 	template<typename T, std::size_t Index>
@@ -46,13 +51,15 @@ namespace internal {
 	template<typename T>
 	concept std_tuple_like =
 		has_tuple_size<T>
-		&& has_get_for_indexes_up_to<T, std::tuple_size<T>::value - 1>();
+		&& has_get_for_indexes_up_to<T, std::tuple_size<std::remove_reference_t<T>>::value - 1>();
 
 	template<typename T, typename... Ts>
 	concept std_tuple_like_of =
 		std_tuple_like<T>
 		&& has_tuple_elements_for_indexes_up_to_same_as<T, std::tuple_size<T>::value - 1, Ts...>();
 
+
+	// glm vec-like
 	template<typename T>
 	concept has_subscription_operator = requires(const T& t) {
 		t[0];
@@ -65,7 +72,7 @@ namespace internal {
 
 	template<typename T>
 	concept has_value_type = requires {
-		typename T::value_type;
+		typename std::remove_reference_t<T>::value_type;
 	};
 
 	template<typename T>
@@ -77,59 +84,176 @@ namespace internal {
 	template<typename T, typename... Ts>
 	concept glm_vector_like_of =
 		glm_vector_like<T>
-		&& std::is_same_v<typename T::value_type, Ts...>;
+		&& (std::is_same_v<typename T::value_type, Ts> && ...);
+	//
+
+	template<typename T, std::size_t Index>
+	struct element;
+
+	template<std_tuple_like T, std::size_t Index>
+	struct element<T, Index> { using type = typename std::tuple_element<Index, T>::type; };
+
+	template<glm_vector_like T, std::size_t Index>
+	struct element<T, Index> { using type = typename T::value_type; };
 
 	template<std_tuple_like T>
-	constexpr auto size(const T& v) {
-		return tuple_size<T>();
+	constexpr auto size() {
+		return std::tuple_size<std::remove_reference_t<T>>::value;
 	}
 
-	constexpr auto size(const glm_vector_like auto& v) {
-		return v.length();
+	template<glm_vector_like T>
+	constexpr auto size() {
+		return std::remove_reference_t<T>{}.length();
 	}
 
-	template<typename T>
-	constexpr auto size_of_default_initialized() {
-		return size(T{});
+	template<typename T, typename... Ts>
+	constexpr bool constructible_from_elements() {
+		if constexpr(size<T>() != sizeof...(Ts)) {
+			return constructible_from_elements<T, Ts..., typename element<T, sizeof...(Ts)>::type>();
+		}
+		else {
+			return std::constructible_from<T, Ts...>;
+		}
 	}
 
 }
 
-template<typename T, typename... Ts>
+template<typename T>
 concept vector =
+	(
+		internal::std_tuple_like<T>
+		||
+		internal::glm_vector_like<T>
+	)
+	&&
+	std::default_initializable<std::remove_reference_t<T>>
+	&&
+	internal::constructible_from_elements<std::remove_reference_t<T>>()
+;
+
+template<typename T, typename... Ts>
+concept vector_of =
+	vector<T>
+	&&
 	(
 		internal::std_tuple_like_of<T, Ts...>
 		||
 		internal::glm_vector_like_of<T, Ts...>
 	)
-	&&
-	std::default_initializable<T>
-	&&
-	std::constructible_from<T, Ts...>
 ;
 
-template<vector V>
-auto size(const V& v) {
-	if constexpr(internal::std_tuple_like<V>) {
-		return tuple_size<V>();
-	}
-	else {
-		return v.length();
-	}
-}
+template<math::vector V>
+inline constexpr std::size_t size = internal::size<V>();
 
-template<vector V, std::size_t Index>
-auto get(const V& v) {
+template<math::vector V, std::size_t Index>
+using element = typename internal::element<V, Index>::type;
+
+template<std::size_t Index, math::vector V>
+decltype(auto) get(V&& v) {
 	if constexpr(internal::std_tuple_like<V>) {
-		return get<Index>(v);
+		return std::get<Index>(v);
 	}
 	else {
 		return v[Index];
 	}
 }
 
-auto operator + (const vector auto& a, const vector auto& b) {
+namespace internal {
+	template<math::vector To, math::vector From, typename...Ts>
+	To to(From from, Ts... values) {
+		if constexpr(sizeof...(Ts) == math::size<From>) {
+			return { values... };
+		}
+		else {
+			return to<To>(from, values..., get<sizeof...(Ts)>(from));
+		}
+	}
+
+}
+
+template<math::vector To>
+To to(math::vector auto from) {
+	return internal::to<To>(from);
+}
+
+namespace internal {
+	template<math::vector V, typename F, std::size_t... Indexes>
+	void for_each_element(V&& v, F&& f) {
+		if constexpr(sizeof...(Indexes) == math::size<V>)
+			(f(get<Indexes>(v)) , ...);
+		else
+			return for_each_element<V, F, Indexes..., sizeof...(Indexes)>(std::forward<V>(v), std::forward<F>(f));
+	}
+
+	template<math::vector A, math::vector B, typename F, std::size_t... Indexes>
+	void for_each_element(F&& f, A&& a, B&& b) {
+		if constexpr(sizeof...(Indexes) == math::size<A>)
+			(f(get<Indexes>(a), get<Indexes>(b)) , ...);
+		else
+			return for_each_element<A, B, F, Indexes..., sizeof...(Indexes)>(std::forward<F>(f), std::forward<A>(a), std::forward<B>(b));
+	}
 	
+}
+
+}
+
+template<math::vector A, math::vector B>
+requires(math::size<A> == math::size<B>)
+auto operator + (A a, B b) {
+	math::internal::for_each_element([](auto& a, auto b) { a += b; }, a, b);
+	return a;
+}
+
+template<math::vector A>
+auto operator - (A a) {
+	math::internal::for_each_element([](auto& a) { a = -a; }, a);
+	return a;
+}
+
+template<math::vector A, math::vector B>
+requires(math::size<A> == math::size<B>)
+auto operator * (A a, B b) {
+	math::internal::for_each_element([](auto& a, auto b) { a *= b; }, a, b);
+	return a;
+}
+
+template<math::vector A>
+auto operator * (A a, auto val) {
+	math::internal::for_each_element([=](auto& a) { a *= val; }, a);
+	return a;
+}
+
+template<math::vector A, math::vector B>
+requires(math::size<A> == math::size<B>)
+auto operator / (A a, B b) {
+	math::internal::for_each_element([](auto& a, auto b) { a /= b; }, a, b);
+	return a;
+}
+
+template<math::vector A>
+auto operator / (A a, auto val) {
+	math::internal::for_each_element([=](auto& a) { a /= val; }, a);
+	return a;
+}
+
+namespace math {
+
+template<math::vector A, math::vector B, std::size_t... Indexes>
+requires(math::size<A> == math::size<B>)
+auto dot(A a, B b) {
+	if constexpr(sizeof...(Indexes) == math::size<A>) {
+		auto m = a * b;
+		return (get<Indexes>(m) + ...);
+	}
+	else return dot<A, B, Indexes..., sizeof...(Indexes)>(a, b);
+}
+
+auto length(math::vector auto v) {
+	std::sqrt(dot(v, v));
+}
+
+auto normalized(math::vector auto v) {
+	return v / length(v);
 }
 
 }

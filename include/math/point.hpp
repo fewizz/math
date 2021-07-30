@@ -5,7 +5,7 @@
 
 namespace math {
 
-template<typename T, std::size_t Size, typename E>
-concept point = math::vector<T, Size, E>;
+template<typename T>
+concept point = math::vector<T>;
 
 }
