@@ -1,29 +1,27 @@
 #if 0
-$CXX --config ./compile_flags.txt -g -o /tmp/test test.cpp
-/tmp/test
+$CXX --config ./compile_flags.txt -g -o /tmp/vector test/vector.cpp
+/tmp/vector
 exit
 #endif
 
 #include <vector>
 #include <string>
 #include <assert.h>
+#include <iostream>
 
 #include "math/vector.hpp"
 #include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
 
 int main() {
 	using namespace std;
 
-	//static_assert(has_get_for_index<std::pair<int, int>, 0>);
 	static_assert(!math::vector<int>);
 	static_assert(math::vector_of<pair<int, int>, int, int>);
 	static_assert(!math::vector_of<std::pair<int, int>, float, float>);
 	static_assert(math::vector_of<glm::vec2, float, float>);
+	static_assert(math::vector_of<glm::vec3, float, float, float>);
 	static_assert(math::vector_of<std::tuple<double, double, double, double>, double, double, double, double>);
-	//static_assert(any_vec<tuple<char, char>>);
-	//static_assert(any_vec<pair<float, float>>);
-	//static_assert(!any_vec<int>);
-	//static_assert(!any_vec<tuple<int, unsigned, char>>);
 
 	glm::vec2 v{1.0F, 12.0F};
 	auto p = math::to<std::pair<float, float>>(v);
@@ -37,4 +35,11 @@ int main() {
 
 	std::pair<float, float> rotated{-1.0F, 1.0F};
 	assert(math::dot(one_pair, rotated) == 0.0F);
+
+	assert(
+		math::length(math::cross<glm::vec3>(
+			std::tuple<float, float, float>{ 1.0F, 0.0F, 0.0F },
+			glm::vec3{ 0.0F, 0.0F, -1.0F }
+		)) == 1.0F
+	);
 }

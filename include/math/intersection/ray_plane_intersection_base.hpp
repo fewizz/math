@@ -10,10 +10,12 @@ struct ray_plane_intersection : ray_intersection_base<Ray, Plane, Dist> {
 
 	ray_plane_intersection(Ray ray, Plane plane)
 		: ray_intersection_base<Ray, Plane, Dist>{ ray, plane, [&]() -> std::optional<Dist> {
-			auto nd = math::dot(normal(plane), direction(ray));
+			using namespace math;
+
+			auto nd = dot(normal(plane), direction(ray));
 
 			if(nd != 0)
-				return { (plane.d() - math::dot(plane.normal(), ray.origin())) / nd };
+				return { (d(plane) - dot(normal(plane), origin(ray))) / nd };
 			return {};
 		}() }
 	{}

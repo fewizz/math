@@ -249,11 +249,27 @@ auto dot(A a, B b) {
 }
 
 auto length(math::vector auto v) {
-	std::sqrt(dot(v, v));
+	return std::sqrt(dot(v, v));
 }
 
 auto normalized(math::vector auto v) {
 	return v / length(v);
+}
+
+template<math::vector V, math::vector V0, math::vector V1>
+requires(math::size<V> == 3 && math::size<V0> == 3 && math::size<V1> == 3)
+auto cross(V0 v0, V1 v1) {
+	return V {
+		math::get<1>(v0) * math::get<2>(v1) - math::get<2>(v0) * math::get<1>(v1),
+		math::get<2>(v0) * math::get<0>(v1) - math::get<0>(v0) * math::get<2>(v1),
+		math::get<0>(v0) * math::get<1>(v1) - math::get<1>(v0) * math::get<0>(v1)
+	};
+}
+
+template<math::vector V>
+requires(math::size<V> == 3)
+V cross(V v0, V v1) {
+	return cross<V, V, V>(v0, v1);
 }
 
 }
