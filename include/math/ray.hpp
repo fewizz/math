@@ -1,22 +1,22 @@
 #pragma once
 
-#include "point.hpp"
+#include "has_origin.hpp"
+#include "has_direction.hpp"
 
 namespace math {
 
 template<typename T>
-concept ray = requires(const T& t) {
-	origin(t);
-	direction(t);
-};
+concept ray = math::has_origin<T> && math::has_direction<T>;
 
-template<math::point V>
+template<math::point P, math::vector V>
 struct ray_by_point_and_direction {
-	V origin;
+	P origin;
 	V direction;
-};
 
-template<math::point V> auto origin(ray_by_point_and_direction<V> r) { return r.origin; }
-template<math::point V> auto direction(ray_by_point_and_direction<V> r) { return r.direction; }
+	ray_by_point_and_direction(P p, V d) : origin{ p }, direction{ d } {}
+
+	friend P origin(ray_by_point_and_direction r) { return r.origin; }
+	friend V direction(ray_by_point_and_direction r) { return r.direction; }
+};
 
 }

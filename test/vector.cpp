@@ -1,9 +1,3 @@
-#if 0
-$CXX --config ./compile_flags.txt -g -o /tmp/vector test/vector.cpp
-/tmp/vector
-exit
-#endif
-
 #include <vector>
 #include <string>
 #include <assert.h>
