@@ -5,7 +5,7 @@
 
 namespace math {
 
-template<math::sm_sphere Sphere, math::ray Ray, typename Dist>
+template<math::sm_sphere Sphere, math::ray Ray, typename Dist = math::length_type<math::origin_type<Sphere>>>
 struct sm_sphere_ray_intersection : sm_sphere_intersection_base<Sphere, Ray, Dist> {
 	/*
 	(tL + D - yP)·(yP) = 0

@@ -178,11 +178,11 @@ To to(math::vector auto from) {
 
 namespace internal {
 	template<math::vector V, typename F, std::size_t... Indexes>
-	void for_each_element(V&& v, F&& f) {
+	void for_each_element(F&& f, V&& v) {
 		if constexpr(sizeof...(Indexes) == math::size<V>)
 			(f(get<Indexes>(v)) , ...);
 		else
-			return for_each_element<V, F, Indexes..., sizeof...(Indexes)>(std::forward<V>(v), std::forward<F>(f));
+			return for_each_element<V, F, Indexes..., sizeof...(Indexes)>(std::forward<F>(f), std::forward<V>(v));
 	}
 
 	template<math::vector A, math::vector B, typename F, std::size_t... Indexes>

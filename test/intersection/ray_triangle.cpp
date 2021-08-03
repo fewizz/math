@@ -13,6 +13,6 @@ int main() {
 			glm::vec3{  0, 1, -1 }
 		}
 	};
-
+	
 	assert(i.distance() == 1.0F);
 }

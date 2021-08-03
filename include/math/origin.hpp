@@ -29,4 +29,7 @@ concept has_origin = requires(const T& t) {
 	{ internal::origin_fn{}(t) } -> math::point;
 };
 
+template<has_origin T>
+using origin_type = decltype(origin(std::declval<T>()));
+
 }

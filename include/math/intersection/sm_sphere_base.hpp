@@ -3,11 +3,12 @@
 #include <optional>
 #include "../sm_sphere.hpp"
 #include "../sphere.hpp"
+#include "../normal.hpp"
 #include <cassert>
 
 namespace math {
 
-template<math::sm_sphere Sphere, typename With, typename Dist>
+template<math::sm_sphere Sphere, typename With, typename Dist = math::length_type<math::origin_type<Sphere>>>
 struct sm_sphere_intersection_base {
 protected:
 	Sphere sphere;
@@ -38,13 +39,17 @@ public:
 		return result.value();
 	}
 
-	auto normal() const {
-		//TODO//return make_normal_negative_to_direction(with.normal(), sphere.direction);
-		return normal(with);
+	auto opposite_normal() const {
+		if constexpr(math::point<With>) {
+			return (sphere_position() - with) / radius(sphere);
+		}
+		else {
+			return math::turn_normal_opposite_to_direction(math::normal(with), math::direction(sphere));
+		}
 	}
 
 	auto position() const {
-		return sphere_position() + ( -normal() * radius(sphere) );
+		return sphere_position() + ( -opposite_normal() * radius(sphere) );
 	}
 };
 

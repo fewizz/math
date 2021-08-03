@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../ray.hpp"
+#include "../normal.hpp"
 #include <optional>
 #include <cassert>
 
@@ -33,9 +34,9 @@ public:
 		return result.value();
 	}
 
-	/*glm::vec<3, T> normal() const {
-		return make_normal_negative_to_direction(with.normal(), ray.direction());
-	}*/
+	auto opposite_normal() const {
+		return math::turn_normal_opposite_to_direction(math::normal(with), math::direction(ray));
+	}
 };
 
 }

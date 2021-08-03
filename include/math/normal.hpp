@@ -31,4 +31,8 @@ concept has_normal = requires(const T& t) {
 	{ internal::normal_fn{}(t) } -> math::vector;
 };
 
+auto turn_normal_opposite_to_direction(math::vector auto n, math::vector auto d) {
+	return math::dot(n, d) > 0 ? -n : n;
+}
+
 }

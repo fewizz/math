@@ -8,9 +8,6 @@ namespace math {
 template<typename T>
 concept ray = math::has_origin<T> && math::has_direction<T>;
 
-template<ray T>
-using origin_type = decltype(origin(std::declval<T>()));
-
 template<math::point P, math::vector V>
 struct ray_by_point_and_direction {
 	P origin;

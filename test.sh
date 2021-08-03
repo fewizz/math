@@ -27,8 +27,6 @@ test() {
 	if [ $? -ne 0 ] ; then
 		exit 1
 	fi
-
-	echo success
 }
 
 if [ ! -z $name ]; then
@@ -43,3 +41,6 @@ test triangle
 test vector
 test intersection/ray_plane
 test intersection/ray_triangle
+test intersection/sm_sphere_plane
+test intersection/sm_sphere_point
+test intersection/sm_sphere_ray

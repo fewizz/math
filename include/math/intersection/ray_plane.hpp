@@ -15,12 +15,13 @@ struct ray_plane_intersection : ray_intersection_base<Ray, Plane, Dist> {
 // t = -(D + P·O) / P·L
 	ray_plane_intersection(Ray ray, Plane plane)
 		: ray_intersection_base<Ray, Plane, Dist>{ ray, plane, [&]() -> std::optional<Dist> {
-			using namespace math;
 
-			auto nd = dot(normal(plane), direction(ray));
+			auto d = math::direction(ray);
+			auto n = math::normal(plane);
+			auto nd = math::dot(n, d);
 
 			if(nd != 0)
-				return { -(distance_to_center(plane) + dot(normal(plane), origin(ray))) / nd };
+				return { -(distance_to_center(plane) + dot(n, origin(ray))) / nd };
 			return {};
 		}() }
 	{}
