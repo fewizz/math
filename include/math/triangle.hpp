@@ -7,7 +7,7 @@
 namespace math {
 
 template<typename T>
-concept triangle = math::has_vertex<T, 0> && math::has_vertex<T, 1> && math::has_vertex<T, 2>;
+concept triangle = math::vertex_count<T> == 3;
 
 template<math::point V>
 struct triangle_by_points {

@@ -1,31 +1,34 @@
 #pragma once
 
 #include "point.hpp"
+#include "vertex.hpp"
 
 namespace math {
 
 template<typename T>
-concept segment = requires(const T& t) {
-	{ point_0(t) } -> math::point;
-	{ point_1(t) } -> math::point;
-};
+concept segment = math::vertex_count<T> == 2;
 
-auto length(segment auto s) {
-	return length(point_1(s) - point_0(s));
+auto length(math::segment auto s) {
+	return math::length(math::vertex<1>(s) - math::vertex<0>(s));
 }
 
-auto direction(segment auto s) {
-	return normalized(point_1(s) - point_0(s));
-}
-
-template<math::point P, math::vector V>
+template<math::point P, math::vector V, typename L = math::element_type<P, 0>>
 struct segment_by_point_direction_length {
-	P point;
+	P origin;
 	V direction;
-	math::element<P, 0> length;
+	L length;
 
-	friend auto point_0(segment_by_point_direction_length s) { return s.origin; }
-	friend auto point_1(segment_by_point_direction_length s) { return s.origin + s.direction * s.length; }
+	segment_by_point_direction_length(P origin, V direction, L length)
+		: origin{ origin }, direction{ direction }, length{ length }
+	{}
+
+	template<std::size_t Index>
+	requires(Index == 0 || Index == 1)
+	constexpr P vertex() const {
+		if constexpr(Index == 0) return origin;
+		else return origin + direction * length;
+	}
+
 	friend auto length(segment_by_point_direction_length s) { return s.length; }
 	friend auto direcion(segment_by_point_direction_length s) { return s.direction; }
 };

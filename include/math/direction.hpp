@@ -1,6 +1,7 @@
 #pragma once
 
 #include "vector.hpp"
+#include "segment.hpp"
 
 namespace math {
 
@@ -15,6 +16,11 @@ struct direction_fn {
 	template<typename T>
 	requires requires(T& t) { { t.direction() } -> math::vector; }
 	constexpr auto operator () (const T& t) const { return t.direction(); }
+
+	template<math::segment T>
+	constexpr auto operator () (const T& t) const {
+		return math::normalized(math::vertex<1>(t) - math::vertex<0>(t));
+	}
 
 };
 

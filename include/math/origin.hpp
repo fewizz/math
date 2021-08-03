@@ -1,6 +1,7 @@
 #pragma once
 
 #include "point.hpp"
+#include "segment.hpp"
 
 namespace math {
 
@@ -16,6 +17,8 @@ struct origin_fn {
 	requires requires(const T& t) { { t.origin() } -> math::point; }
 	constexpr auto operator () (const T& t) const { return t.origin(); }
 
+	template<math::segment T>
+	constexpr auto operator () (const T& t) const { return math::vertex<0>(t); }
 };
 
 }

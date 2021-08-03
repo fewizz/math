@@ -35,4 +35,19 @@ concept has_vertex = requires(const T& t) {
 	internal::vertex_fn<Index>{}(t);
 };
 
+namespace internal {
+	template<typename T, std::size_t CurrentIndex = 0>
+	constexpr std::size_t vertex_count() {
+		if constexpr(math::has_vertex<T,CurrentIndex>) {
+			return vertex_count<T, CurrentIndex+1>();
+		}
+		else {
+			return CurrentIndex;
+		}
+	}
+}
+
+template<typename T>
+constexpr inline std::size_t vertex_count = internal::vertex_count<T>();
+
 }

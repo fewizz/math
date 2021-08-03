@@ -36,6 +36,7 @@ fi
 
 test plane
 test ray
+test segment
 test sm_sphere
 test triangle
 test vector
