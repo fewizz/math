@@ -15,7 +15,7 @@ template<math::point P, math::vector V>
 struct sm_sphere_by_origin_direction_radius {
 	P origin;
 	P direction;
-	math::element<P, 0> radius;
+	math::element_type<P, 0> radius;
 
 	friend auto origin(sm_sphere_by_origin_direction_radius s) { return s.origin; }
 	friend auto direction(sm_sphere_by_origin_direction_radius s) { return s.direction; }

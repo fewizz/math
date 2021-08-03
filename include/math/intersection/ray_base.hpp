@@ -5,7 +5,7 @@
 
 namespace math {
 
-template<math::ray Ray, typename With, typename Dist>
+template<math::ray Ray, typename With, typename Dist = math::length_type<math::origin_type<Ray>>>
 struct ray_intersection_base {
 protected:
 	Ray ray;
@@ -24,7 +24,7 @@ public:
 	}
 
 	auto position() const {
-		return ray.origin() + ray.direction() * distance();
+		return origin(ray) + direction(ray) * distance();
 	}
 
 	Dist distance() const {

@@ -3,19 +3,20 @@
 #include <cassert>
 
 int main() {
-	using namespace math;
 	using namespace glm;
 
-	plane_by_normal_d p{ vec3{1,0,0}, 1.0F };
-	static_assert(plane<plane_by_normal_d<vec3, float>>);
+	math::plane_by_normal_and_distance_to_center p{ vec3{1,0,0}, 1.0F };
+	static_assert(math::has_normal<decltype(p)>);
+	static_assert(math::plane<decltype(p)>);
 
 	vec3 n{1,0,0};
-	assert(normal(p) == n);
+	assert(math::normal(p) == n);
 	
-	assert(d_for_normal(p) == 1.0F);
+	assert(distance_to_center(p) == 1.0F);
 
-	plane_by_perpendicular_d p0{ vec3{1,0,0}, 1.0F };
-	static_assert(plane<plane_by_perpendicular_d<vec3, float>>);
-	static_assert(has_normal<plane_by_perpendicular_d<vec3, float>>);
-	static_assert(has_d_for_normal<plane_by_perpendicular_d<vec3, float>>);
+	math::plane_by_perpendicular_and_distance_to_center p0{ vec3{1,0,0}, 1.0F };
+	static_assert(math::has_normal<decltype(p0)>);
+	static_assert(math::plane<decltype(p0)>);
+	static_assert(math::has_normal<decltype(p0)>);
+	static_assert(math::has_distance_to_center<decltype(p0)>);
 }

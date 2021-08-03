@@ -5,7 +5,7 @@
 
 namespace math {
 
-template<math::ray Ray, math::plane Plane, typename Dist = decltype(d_for_normal(std::declval<Plane>()))>
+template<math::ray Ray, math::plane Plane, typename Dist = math::length_type<math::origin_type<Ray>>>
 struct ray_plane_intersection : ray_intersection_base<Ray, Plane, Dist> {
 
 	ray_plane_intersection(Ray ray, Plane plane)
@@ -15,7 +15,7 @@ struct ray_plane_intersection : ray_intersection_base<Ray, Plane, Dist> {
 			auto nd = dot(normal(plane), direction(ray));
 
 			if(nd != 0)
-				return { (d_for_normal(plane) - dot(normal(plane), origin(ray))) / nd };
+				return { (distance_to_center(plane) - dot(normal(plane), origin(ray))) / nd };
 			return {};
 		}() }
 	{}

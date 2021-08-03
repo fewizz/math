@@ -1,17 +1,16 @@
 #pragma once
 
-#include "normal0.hpp"
 #include "perpendicular0.hpp"
+#include "normal0.hpp"
 
 namespace math {
 
 namespace internal {
 
-struct normal_fn {
-
+struct perpendicular_fn {
 	template<internal::invokable_perpendicular_fn0 T>
 	constexpr auto operator () (const T& t) const {
-		return math::normalized(internal::perpendicular_fn0{}(t));
+		return internal::perpendicular_fn0{}(t);
 	}
 
 	template<internal::invokable_normal_fn0 T>
@@ -23,12 +22,12 @@ struct normal_fn {
 }
 
 inline namespace cpo {
-	inline constexpr internal::normal_fn normal{};
+	inline constexpr auto perpendicular = internal::perpendicular_fn{};
 }
 
 template<typename T>
-concept has_normal = requires(const T& t) {
-	{ internal::normal_fn{}(t) } -> math::vector;
+concept has_perpendicular = requires(const T& t) {
+	{ math::internal::perpendicular_fn{}(t) } -> math::vector;
 };
 
 }

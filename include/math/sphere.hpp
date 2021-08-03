@@ -14,7 +14,7 @@ concept sphere = requires(const T& t) {
 template<math::point P>
 struct sphere_by_point_radius {
 	P origin;
-	math::element<P, 0> radius;
+	math::element_type<P, 0> radius;
 
 	friend P origin(sphere_by_point_radius s) { return s.origin; }
 	friend auto radius(sphere_by_point_radius s) { return s.radius; }

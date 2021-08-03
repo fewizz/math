@@ -146,7 +146,7 @@ template<math::vector V>
 inline constexpr std::size_t size = internal::size<V>();
 
 template<math::vector V, std::size_t Index>
-using element = typename internal::element<V, Index>::type;
+using element_type = typename internal::element<V, Index>::type;
 
 template<std::size_t Index, math::vector V>
 decltype(auto) get(V&& v) {
@@ -251,6 +251,9 @@ auto dot(A a, B b) {
 auto length(math::vector auto v) {
 	return std::sqrt(dot(v, v));
 }
+
+template<math::vector V>
+using length_type = decltype(math::length(std::declval<V>()));
 
 auto normalized(math::vector auto v) {
 	return v / length(v);

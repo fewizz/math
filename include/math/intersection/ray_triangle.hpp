@@ -1,7 +1,7 @@
 #pragma once
 
-#include "ray_intersection_base.hpp"
-#include "ray_plane_intersection_base.hpp"
+#include "ray_base.hpp"
+#include "ray_plane.hpp"
 #include "../triangle.hpp"
 
 namespace math {
@@ -11,14 +11,18 @@ int is_point_outside_triangle(Point p, Triangle t) {
 	using namespace math;
 	auto n = normal(t);
 
-	if(dot(cross(t[1] - t[0], p - t[0]), n) < 0) return 1;
-	if(dot(cross(t[2] - t[1], p - t[1]), n) < 0) return 2;
-	if(dot(cross(t[0] - t[2], p - t[2]), n) < 0) return 3;
+	auto p0 = vertex<0>(t);
+	auto p1 = vertex<1>(t);
+	auto p2 = vertex<2>(t);
+
+	if(dot(cross(p1 - p0, p - p0), n) < 0) return 1;
+	if(dot(cross(p2 - p1, p - p1), n) < 0) return 2;
+	if(dot(cross(p0 - p2, p - p2), n) < 0) return 3;
 
 	return 0;
 }
 
-template<math::ray Ray, math::triangle Triangle, typename Dist>
+template<math::ray Ray, math::triangle Triangle, typename Dist = math::length_type<math::origin_type<Ray>>>
 struct ray_triangle_intersection : ray_intersection_base<Ray, Triangle, Dist> {
 
 	ray_triangle_intersection(Ray ray, Triangle triangle)

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "sm_sphere_intersection_base.hpp"
+#include "sm_sphere_base.hpp"
 #include "../ray.hpp"
 
 namespace math {

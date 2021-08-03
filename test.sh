@@ -41,3 +41,4 @@ test ray
 test plane
 test triangle
 test intersection/ray_plane
+test intersection/ray_triangle

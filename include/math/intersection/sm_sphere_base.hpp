@@ -25,11 +25,11 @@ public:
 	}
 
 	auto sphere_position() const {
-		return sphere.origin + sphere.direction * sphere_distance();
+		return origin(sphere) + direction(sphere) * sphere_distance();
 	}
 
 	auto sphere_at_position() const {
-		return math::sphere_by_point_radius{ sphere_position(), sphere.radius };
+		return math::sphere_by_point_radius{ sphere_position(), radius(sphere) };
 	}
 
 	Dist sphere_distance() const {
@@ -42,7 +42,7 @@ public:
 	}
 
 	auto position() const {
-		return sphere_position() + ( -normal() * sphere.radius );
+		return sphere_position() + ( -normal() * radius(sphere) );
 	}
 };
 
