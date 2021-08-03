@@ -36,9 +36,10 @@ if [ ! -z $name ]; then
 	exit 0
 fi
 
-test vector
-test ray
 test plane
+test ray
+test sm_sphere
 test triangle
+test vector
 test intersection/ray_plane
 test intersection/ray_triangle

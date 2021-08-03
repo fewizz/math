@@ -9,12 +9,12 @@ namespace internal {
 struct direction_fn {
 
 	template<typename T>
-	requires requires(T&& t) { { direction(std::forward<T>(t)) } -> math::vector; }
-	constexpr auto operator () (T&& t) const { return origin(std::forward<T>(t)); }
+	requires requires(const T& t) { { direction(t) } -> math::vector; }
+	constexpr auto operator () (const T& t) const { return direction(t); }
 
 	template<typename T>
-	requires requires(T&& t) { { t.origin() } -> math::vector; }
-	constexpr auto operator () (T&& t) const { return t.origin(); }
+	requires requires(T& t) { { t.direction() } -> math::vector; }
+	constexpr auto operator () (const T& t) const { return t.direction(); }
 
 };
 
@@ -26,7 +26,7 @@ inline namespace cpo {
 
 template<typename T>
 concept has_direction = requires(const T& t) {
-	{ math::direction(t) } -> math::vector;
+	{ internal::direction_fn{}(t) } -> math::vector;
 };
 
 }

@@ -2,6 +2,7 @@
 
 #include "../ray.hpp"
 #include <optional>
+#include <cassert>
 
 namespace math {
 
@@ -28,6 +29,7 @@ public:
 	}
 
 	Dist distance() const {
+		assert(result.has_value());
 		return result.value();
 	}
 

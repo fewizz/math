@@ -9,12 +9,12 @@ namespace internal {
 struct origin_fn {
 
 	template<typename T>
-	requires requires(T&& t) { { origin(std::forward<T>(t)) } -> math::point; }
-	constexpr auto operator () (T&& t) const { return origin(std::forward<T>(t)); }
+	requires requires(const T& t) { { origin(t) } -> math::point; }
+	constexpr auto operator () (const T& t) const { return origin(t); }
 
 	template<typename T>
-	requires requires(T&& t) { { t.origin() } -> math::point; }
-	constexpr auto operator () (T&& t) const { return t.origin(); }
+	requires requires(const T& t) { { t.origin() } -> math::point; }
+	constexpr auto operator () (const T& t) const { return t.origin(); }
 
 };
 
@@ -26,7 +26,7 @@ inline namespace cpo {
 
 template<typename T>
 concept has_origin = requires(const T& t) {
-	{ math::origin(t) } -> math::point;
+	{ internal::origin_fn{}(t) } -> math::point;
 };
 
 }

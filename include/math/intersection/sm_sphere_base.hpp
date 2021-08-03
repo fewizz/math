@@ -3,6 +3,7 @@
 #include <optional>
 #include "../sm_sphere.hpp"
 #include "../sphere.hpp"
+#include <cassert>
 
 namespace math {
 
@@ -33,6 +34,7 @@ public:
 	}
 
 	Dist sphere_distance() const {
+		assert(result.has_value());
 		return result.value();
 	}
 

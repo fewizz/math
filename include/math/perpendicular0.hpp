@@ -29,8 +29,8 @@ struct perpendicular_fn0 {
 	template<math::triangle T>
 	constexpr auto operator () (const T& t) const {
 		auto v0 = math::vertex<0>(t);
-		auto v1 = math::vertex<0>(t);
-		auto v2 = math::vertex<0>(t);
+		auto v1 = math::vertex<1>(t);
+		auto v2 = math::vertex<2>(t);
 
 		return math::cross(v1-v0, v2-v0);
 	}

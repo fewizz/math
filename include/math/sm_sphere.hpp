@@ -1,21 +1,28 @@
 #pragma once
 
 #include "point.hpp"
+#include "radius.hpp"
+#include "origin.hpp"
+#include "direction.hpp"
 
 namespace math {
 
 template<typename T>
-concept sm_sphere = requires(const T& t) {
-	{ origin(t) } -> math::point;
-	{ direction(t) } -> math::vector;
-	radius(t);
-};
+concept sm_sphere =
+	has_radius<T>
+	&& has_origin<T>
+	&& has_direction<T>
+;
 
-template<math::point P, math::vector V>
+template<math::point P, math::vector V, typename R>
 struct sm_sphere_by_origin_direction_radius {
 	P origin;
 	P direction;
-	math::element_type<P, 0> radius;
+	R radius;
+
+	sm_sphere_by_origin_direction_radius(P p, V v, R r)
+		: origin { p }, direction{ v }, radius{ r }
+	{}
 
 	friend auto origin(sm_sphere_by_origin_direction_radius s) { return s.origin; }
 	friend auto direction(sm_sphere_by_origin_direction_radius s) { return s.direction; }
