@@ -14,6 +14,7 @@ protected:
 	Sphere sphere;
 	With with;
 	std::optional<Dist> result;
+	decltype(math::direction(std::declval<Sphere>())) normal;
 
 	sm_sphere_intersection_base(Sphere sphere, With with, std::optional<Dist> result = {})
 		: sphere{ sphere }, with{ with }, result{ result }
@@ -40,12 +41,16 @@ public:
 	}
 
 	auto opposite_normal() const {
-		if constexpr(math::point<With>) {
+		/*if constexpr(math::point<With>) {
 			return (sphere_position() - with) / radius(sphere);
+		}
+		else if constexpr(math::segment<With>) {
+			return 
 		}
 		else {
 			return math::turn_normal_opposite_to_direction(math::normal(with), math::direction(sphere));
-		}
+		}*/
+		return normal;
 	}
 
 	auto position() const {

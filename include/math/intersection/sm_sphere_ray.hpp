@@ -35,59 +35,50 @@ struct sm_sphere_ray_intersection : sm_sphere_intersection_base<Sphere, Ray, Dis
 	b = 2L·D - 2D·PL·P/P₂
 	c = D₂ - (D·P)²/P₂ - r²
 	*/
-	sm_sphere_ray_intersection(Sphere s, Ray r)
-		: sm_sphere_intersection_base<Sphere, Ray, Dist>{ s, r, [&]() -> std::optional<Dist> {
-			using namespace std;
-			using namespace math;
+	sm_sphere_ray_intersection(Sphere s, Ray ray)
+		: sm_sphere_intersection_base<Sphere, Ray, Dist>{ s, ray }
+	{
+		auto S = math::origin(s);
+		auto R = math::origin(ray);
+		auto L = math::direction(s);
+		auto P = math::direction(ray);
+		auto D = S - R;
+		auto r = math::radius(s);
 
-			auto S = origin(s);
-			auto R = origin(r);
-			auto L = direction(s);
-			auto P = direction(r);
-			auto D = S - R;
-			auto r = radius(s);
+		auto LL = math::dot(L,L);
+		auto PP = math::dot(P,P);
+		auto LP = math::dot(L,P);
+		auto DP = math::dot(D,P);
 
-			auto LL = dot(L,L);
-			auto PP = dot(P,P);
-			auto LP = dot(L,P);
-			auto DP = dot(D,P);
+		Dist a = LL - LP*LP/PP;
+		Dist b = 2.0*(math::dot(L,D) - DP* LP/PP);
+		Dist c = math::dot(D,D) - DP*DP/PP - r*r;
 
-			Dist a = LL - LP*LP/PP;
-			Dist b = 2.0*(dot(L,D) - DP* LP/PP);
-			Dist c = dot(D,D) - DP*DP/PP - r*r;
+		Dist dis = b*b - 4*a*c;
+		if(dis < 0 || a == 0) return;
 
-			Dist dis = b*b - 4*a*c;
-			if(dis < 0 || a == 0) return {};
+		Dist distance = (-b - std::sqrt(dis)) / (2.0*a);
 
-			Dist t = (-b - sqrt(dis)) / (2.0*a);
-
-			return { t };
-		}() }
-	{}
+		this->result = distance;
+		this->normal = (this->sphere_position() - position()) / r;
+	}
 
 	auto position() const {
 		return origin(this->with) + direction(this->with) * ray_distance();
 	}
 
 	Dist ray_distance() const {
-		using namespace std;
-		using namespace math;
-
-		auto S = origin(this->sphere);
-		auto R = origin(this->with);
-		auto L = direction(this->sphere);
-		auto P = direction(this->with);
+		auto S = math::origin(this->sphere);
+		auto R = math::origin(this->with);
+		auto L = math::direction(this->sphere);
+		auto P = math::direction(this->with);
 		auto D = S - R;
 
-		auto PP = dot(P,P);
-		auto LP = dot(L,P);
-		auto DP = dot(D,P);
+		auto PP = math::dot(P,P);
+		auto LP = math::dot(L,P);
+		auto DP = math::dot(D,P);
 		
 		return (this->sphere_distance() * LP + DP) / PP;
-	}
-
-	auto normal() const {
-		return (this->sphere_position() - position()) / radius(this->sphere);
 	}
 };
 

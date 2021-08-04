@@ -10,14 +10,17 @@ template<math::sm_sphere Sphere, math::plane Plane, typename Dist = math::length
 struct sm_sphere_plane_intersection : sm_sphere_intersection_base<Sphere, Plane, Dist> {
 
 	sm_sphere_plane_intersection(Sphere s, Plane p)
-		: sm_sphere_intersection_base<Sphere, Plane, Dist>{ s, p, [&]() -> std::optional<Dist> {
-			auto i = math::ray_plane_intersection{ s, p };
-			if(!i) return {};
+		: sm_sphere_intersection_base<Sphere, Plane, Dist>{ s, p}
+	{
+		auto i = math::ray_plane_intersection{ s, p };
+		if(!i) return;
 
-			float cos0 = std::abs(math::dot(i.opposite_normal(), math::direction(s)));
-			return { i.distance() - (math::radius(s) / cos0 ) };
-		}() }
-	{}
+		auto on = i.opposite_normal();
+		float cos0 = std::abs(math::dot(on, math::direction(s)));
+		this->result = i.distance() - (math::radius(s) / cos0 );
+		this->normal = on;
+	}
+	
 
 };
 

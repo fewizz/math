@@ -45,3 +45,4 @@ test intersection/ray_triangle
 test intersection/sm_sphere_plane
 test intersection/sm_sphere_point
 test intersection/sm_sphere_ray
+test intersection/sm_sphere_segment

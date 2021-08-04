@@ -17,21 +17,23 @@ struct sm_sphere_point_intersection : math::sm_sphere_intersection_base<Sphere, 
 	c = S₂ - 2S·P + P₂ - r²
 	*/
 	sm_sphere_point_intersection(Sphere sphere, Point point)
-		: sm_sphere_intersection_base<Sphere, Point, Dist>{ sphere, point, [&]() -> std::optional<Dist> {
-			auto S = math::origin(sphere);
-			auto P = point;
-			auto D = math::direction(sphere);
-			auto r = math::radius(sphere);
+		: sm_sphere_intersection_base<Sphere, Point, Dist>{ sphere, point }
+	{
+		auto S = math::origin(sphere);
+		auto P = point;
+		auto D = math::direction(sphere);
+		auto r = math::radius(sphere);
 
-			Dist a = math::dot(D, D);
-			Dist b = 2.0 * (math::dot(S, D) - math::dot(D, P));
-			Dist c = math::dot(S, S) - 2.0 * math::dot(S, P) + math::dot(P, P) - r*r;
+		Dist a = math::dot(D, D);
+		Dist b = 2.0 * (math::dot(S, D) - math::dot(D, P));
+		Dist c = math::dot(S, S) - 2.0 * math::dot(S, P) + math::dot(P, P) - r*r;
 
-			Dist dis = b*b - 4.0*a*c;
-			if(dis < 0) return {};
-			return { (-b - std::sqrt(dis)) / (2.0 * a) };
-		}() }
-	{}
+		Dist dis = b*b - 4.0*a*c;
+		if(dis < 0) return;
+		Dist distance = (-b - std::sqrt(dis)) / (2.0 * a);
+		this->result = distance;
+		this->normal = (S + D*distance - P) / r;
+	}
 };
 
 }
