@@ -39,6 +39,7 @@ test ray
 test segment
 test sm_sphere
 test triangle
+test tuple
 test vector
 test intersection/ray_plane
 test intersection/ray_triangle

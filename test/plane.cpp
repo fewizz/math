@@ -1,5 +1,6 @@
 #include "math/plane.hpp"
 #include <glm/vec3.hpp>
+#include <glm/geometric.hpp>
 #include <cassert>
 
 int main() {

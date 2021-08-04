@@ -26,7 +26,7 @@ concept plane =
 	(math::has_normal<T> || math::has_perpendicular<T>)
 ;
 
-template<typename T>
+/*template<typename T>
 requires(math::has_any_point<T> && math::has_normal<T>)
 auto d_for_normal(T&& p) {
 	return -math::dot(any_point(p), math::normal(std::forward<T>(p)));
@@ -36,7 +36,7 @@ template<typename T>
 requires(math::has_perpendicular<T> && math::has_d_for_perpendicular<T>)
 auto d_for_normal(T p) {
 	return d_for_perpendicular(p) / length(math::perpendicular(p));
-}
+}*/
 
 template<math::vector V, typename D = math::element_type<V, 0>>
 struct plane_by_normal_and_distance_to_center {

@@ -32,7 +32,7 @@ struct perpendicular_fn0 {
 		auto v1 = math::vertex<1>(t);
 		auto v2 = math::vertex<2>(t);
 
-		return math::cross(v1-v0, v2-v0);
+		return cross(v1-v0, v2-v0);
 	}
 };
 
