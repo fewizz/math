@@ -5,11 +5,14 @@
 
 #include "math/vector.hpp"
 #include <glm/vec2.hpp>
+#include <glm/geometric.hpp>
 #include <glm/vec3.hpp>
 
 int main() {
 	using namespace std;
 
+	static_assert(math::vector<glm::vec2>);
+	static_assert(!math::tuple<int>);
 	static_assert(!math::vector<int>);
 	static_assert(math::vector_of<pair<int, int>, int, int>);
 	static_assert(!math::vector_of<std::pair<int, int>, float, float>);
