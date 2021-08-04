@@ -23,7 +23,7 @@ struct segment_by_point_direction_length {
 	{}
 
 	template<std::size_t Index>
-	requires(Index == 0 || Index == 1)
+	requires(Index < 2)
 	constexpr P vertex() const {
 		if constexpr(Index == 0) return origin;
 		else return origin + direction * length;

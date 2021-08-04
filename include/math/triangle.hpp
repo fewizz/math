@@ -20,7 +20,7 @@ struct triangle_by_points {
 	{}
 
 	template<std::size_t Index>
-	requires(Index >= 0 && Index < 3)
+	requires(Index < 3)
 	constexpr V vertex() const {
 		if constexpr(Index == 0) return v0;
 		if constexpr(Index == 1) return v1;
