@@ -1,5 +1,6 @@
 #include "math/sm_sphere.hpp"
-#include "glm/vec3.hpp"
+#include <glm/vec3.hpp>
+#include <glm/geometric.hpp>
 #include <cassert>
 
 int main() {

@@ -1,6 +1,7 @@
 #include "math/intersection/sm_sphere_segment.hpp"
 #include "math/segment.hpp"
 #include <glm/vec3.hpp>
+#include <glm/geometric.hpp>
 #include <cassert>
 
 int main() {

@@ -5,7 +5,7 @@
 
 namespace math {
 
-template<math::sm_sphere Sphere, math::ray Ray, typename Dist = math::length_type<math::origin_type<Sphere>>>
+template<math::sm_sphere Sphere, math::ray Ray, typename Dist = math::common_element_type<math::origin_type<Sphere>>>
 struct sm_sphere_ray_intersection : sm_sphere_intersection_base<Sphere, Ray, Dist> {
 	/*
 	(tL + D - yP)·(yP) = 0
@@ -45,14 +45,14 @@ struct sm_sphere_ray_intersection : sm_sphere_intersection_base<Sphere, Ray, Dis
 		auto D = S - R;
 		auto r = math::radius(s);
 
-		auto LL = math::dot(L,L);
-		auto PP = math::dot(P,P);
-		auto LP = math::dot(L,P);
-		auto DP = math::dot(D,P);
+		auto LL = dot(L,L);
+		auto PP = dot(P,P);
+		auto LP = dot(L,P);
+		auto DP = dot(D,P);
 
 		Dist a = LL - LP*LP/PP;
-		Dist b = 2.0*(math::dot(L,D) - DP* LP/PP);
-		Dist c = math::dot(D,D) - DP*DP/PP - r*r;
+		Dist b = 2.0*(dot(L,D) - DP* LP/PP);
+		Dist c = dot(D,D) - DP*DP/PP - r*r;
 
 		Dist dis = b*b - 4*a*c;
 		if(dis < 0 || a == 0) return;
@@ -74,9 +74,9 @@ struct sm_sphere_ray_intersection : sm_sphere_intersection_base<Sphere, Ray, Dis
 		auto P = math::direction(this->with);
 		auto D = S - R;
 
-		auto PP = math::dot(P,P);
-		auto LP = math::dot(L,P);
-		auto DP = math::dot(D,P);
+		auto PP = dot(P,P);
+		auto LP = dot(L,P);
+		auto DP = dot(D,P);
 		
 		return (this->sphere_distance() * LP + DP) / PP;
 	}

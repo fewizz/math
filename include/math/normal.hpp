@@ -11,7 +11,7 @@ struct normal_fn {
 
 	template<internal::invokable_perpendicular_fn0 T>
 	constexpr auto operator () (const T& t) const {
-		return math::normalized(internal::perpendicular_fn0{}(t));
+		return math::normalize(internal::perpendicular_fn0{}(t));
 	}
 
 	template<internal::invokable_normal_fn0 T>
@@ -32,7 +32,7 @@ concept has_normal = requires(const T& t) {
 };
 
 auto turn_normal_opposite_to_direction(math::vector auto n, math::vector auto d) {
-	return math::dot(n, d) > 0 ? -n : n;
+	return dot(n, d) > 0 ? -n : n;
 }
 
 }

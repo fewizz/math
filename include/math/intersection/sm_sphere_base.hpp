@@ -1,14 +1,14 @@
 #pragma once
 
-#include <optional>
 #include "../sm_sphere.hpp"
 #include "../sphere.hpp"
 #include "../normal.hpp"
 #include <cassert>
+#include <optional>
 
 namespace math {
 
-template<math::sm_sphere Sphere, typename With, typename Dist = math::length_type<math::origin_type<Sphere>>>
+template<math::sm_sphere Sphere, typename With, typename Dist = math::common_element_type<math::origin_type<Sphere>>>
 struct sm_sphere_intersection_base {
 protected:
 	Sphere sphere;
@@ -54,7 +54,7 @@ public:
 	}
 
 	auto position() const {
-		return sphere_position() + ( -opposite_normal() * radius(sphere) );
+		return sphere_position() + ( -opposite_normal() * math::radius(sphere) );
 	}
 };
 

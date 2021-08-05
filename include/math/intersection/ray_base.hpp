@@ -7,7 +7,7 @@
 
 namespace math {
 
-template<math::ray Ray, typename With, typename Dist = math::length_type<math::origin_type<Ray>>>
+template<math::ray Ray, typename With, typename Dist = math::common_element_type<math::origin_type<Ray>>>
 struct ray_intersection_base {
 protected:
 	Ray ray;

@@ -12,13 +12,15 @@ auto length(math::segment auto s) {
 	return math::length(math::vertex<1>(s) - math::vertex<0>(s));
 }
 
-template<math::point P, math::vector V, typename L = math::element_type<P, 0>>
+template<math::point P, math::vector V>
 struct segment_by_point_direction_length {
+	using length_type = decltype(math::length(V{}));
+
 	P origin;
 	V direction;
-	L length;
+	length_type length;
 
-	segment_by_point_direction_length(P origin, V direction, L length)
+	segment_by_point_direction_length(P origin, V direction, length_type length)
 		: origin{ origin }, direction{ direction }, length{ length }
 	{}
 

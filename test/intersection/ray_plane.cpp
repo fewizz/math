@@ -1,7 +1,8 @@
 #include "math/intersection/ray_plane.hpp"
-#include "glm/vec3.hpp"
 #include "math/plane.hpp"
 #include "math/ray.hpp"
+#include <glm/vec3.hpp>
+#include <glm/geometric.hpp>
 #include <cassert>
 
 int main() {

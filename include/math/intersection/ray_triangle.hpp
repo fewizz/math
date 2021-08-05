@@ -22,7 +22,7 @@ int is_point_outside_triangle(Point p, Triangle t) {
 	return 0;
 }
 
-template<math::ray Ray, math::triangle Triangle, typename Dist = math::length_type<math::origin_type<Ray>>>
+template<math::ray Ray, math::triangle Triangle, typename Dist = math::common_element_type<math::origin_type<Ray>>>
 struct ray_triangle_intersection : ray_intersection_base<Ray, Triangle, Dist> {
 
 	ray_triangle_intersection(Ray ray, Triangle triangle)

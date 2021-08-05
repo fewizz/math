@@ -1,10 +1,11 @@
 #pragma once
 
+#include "math/tuple.hpp"
 #include "sm_sphere_base.hpp"
 
 namespace math {
 
-template<math::sm_sphere Sphere, math::point Point, typename Dist = math::length_type<math::origin_type<Sphere>>>
+template<math::sm_sphere Sphere, math::point Point, typename Dist = math::common_element_type<math::origin_type<Sphere>>>
 struct sm_sphere_point_intersection : math::sm_sphere_intersection_base<Sphere, Point, Dist> {
 	/*
 	(S + Dt - P)₂ = r²
@@ -24,9 +25,9 @@ struct sm_sphere_point_intersection : math::sm_sphere_intersection_base<Sphere, 
 		auto D = math::direction(sphere);
 		auto r = math::radius(sphere);
 
-		Dist a = math::dot(D, D);
-		Dist b = 2.0 * (math::dot(S, D) - math::dot(D, P));
-		Dist c = math::dot(S, S) - 2.0 * math::dot(S, P) + math::dot(P, P) - r*r;
+		Dist a = dot(D, D);
+		Dist b = 2.0 * (dot(S, D) - dot(D, P));
+		Dist c = dot(S, S) - 2.0 * dot(S, P) + dot(P, P) - r*r;
 
 		Dist dis = b*b - 4.0*a*c;
 		if(dis < 0) return;

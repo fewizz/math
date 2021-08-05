@@ -106,10 +106,6 @@ auto dot(V0 v0, V1 v1) {
 	return internal::dot(v0, v1, std::make_index_sequence<math::size<V0>>());
 }
 
-auto length(cartesian_vector auto v) {
-	return std::sqrt(dot(v, v));
-}
-
 template<math::cartesian_vector V, math::cartesian_vector V0, math::cartesian_vector V1>
 requires(math::size<V> == 3 && math::size<V0> == 3 && math::size<V1> == 3)
 V cross(V0 v0, V1 v1) {

@@ -3,7 +3,7 @@
 #include "point.hpp"
 #include "normal.hpp"
 #include "perpendicular.hpp"
-#include "has_any_point.hpp"
+//#include "has_any_point.hpp"
 #include <glm/vec3.hpp>
 #include "distance_to_center.hpp"
 

@@ -19,7 +19,7 @@ struct direction_fn {
 
 	template<math::segment T>
 	constexpr auto operator () (const T& t) const {
-		return math::normalized(math::vertex<1>(t) - math::vertex<0>(t));
+		return math::normalize(math::vertex<1>(t) - math::vertex<0>(t));
 	}
 
 };

@@ -1,5 +1,6 @@
 #include "math/intersection/sm_sphere_point.hpp"
 #include <glm/vec3.hpp>
+#include <glm/geometric.hpp>
 #include <cassert>
 
 int main() {

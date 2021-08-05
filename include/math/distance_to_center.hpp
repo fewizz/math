@@ -24,7 +24,7 @@ struct distance_to_center_fn {
 	template<typename T>
 	requires(math::has_normal<T> && math::has_vertex<T, 0>)
 	constexpr auto operator () (const T& t) const {
-		return -math::dot(math::normal(t), math::vertex<0>(t));
+		return -dot(math::normal(t), math::vertex<0>(t));
 	}
 };
 

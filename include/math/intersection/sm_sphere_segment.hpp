@@ -6,7 +6,7 @@
 
 namespace math {
 
-template<math::sm_sphere Sphere, math::segment Segment, typename Dist = math::length_type<math::origin_type<Sphere>>>
+template<math::sm_sphere Sphere, math::segment Segment, typename Dist = math::common_element_type<math::origin_type<Sphere>>>
 struct sm_sphere_segment_intersection : sm_sphere_intersection_base<Sphere, Segment, Dist> {
 	enum type_t {
 		edge, vertex

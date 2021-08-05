@@ -5,7 +5,7 @@
 
 namespace math {
 
-template<math::ray Ray, math::plane Plane, typename Dist = math::length_type<math::origin_type<Ray>>>
+template<math::ray Ray, math::plane Plane, typename Dist = math::common_element_type<math::origin_type<Ray>>>
 struct ray_plane_intersection : ray_intersection_base<Ray, Plane, Dist> {
 
 // P·x + D = 0
@@ -18,7 +18,7 @@ struct ray_plane_intersection : ray_intersection_base<Ray, Plane, Dist> {
 
 			auto d = math::direction(ray);
 			auto n = math::normal(plane);
-			auto nd = math::dot(n, d);
+			auto nd = dot(n, d);
 
 			if(nd != 0)
 				return { -(distance_to_center(plane) + dot(n, origin(ray))) / nd };

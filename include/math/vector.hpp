@@ -1,6 +1,7 @@
 #pragma once
 
 #include "tuple.hpp"
+#include <cmath>
 
 namespace math {
 
@@ -26,8 +27,15 @@ concept vector =
 		t / n;
 
 		dot(t, t);
-		length(t);
 	}
 ;
+
+auto length(math::vector auto v) {
+	return std::sqrt(dot(v, v));
+}
+
+auto normalize(math::vector auto v) {
+	return v / length(v);
+}
 
 }

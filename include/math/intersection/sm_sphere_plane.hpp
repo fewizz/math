@@ -6,7 +6,7 @@
 
 namespace math {
 
-template<math::sm_sphere Sphere, math::plane Plane, typename Dist = math::length_type<math::origin_type<Sphere>>>
+template<math::sm_sphere Sphere, math::plane Plane, typename Dist = math::common_element_type<math::origin_type<Sphere>>>
 struct sm_sphere_plane_intersection : sm_sphere_intersection_base<Sphere, Plane, Dist> {
 
 	sm_sphere_plane_intersection(Sphere s, Plane p)
@@ -16,11 +16,10 @@ struct sm_sphere_plane_intersection : sm_sphere_intersection_base<Sphere, Plane,
 		if(!i) return;
 
 		auto on = i.opposite_normal();
-		float cos0 = std::abs(math::dot(on, math::direction(s)));
+		float cos0 = std::abs(dot(on, math::direction(s)));
 		this->result = i.distance() - (math::radius(s) / cos0 );
 		this->normal = on;
 	}
-	
 
 };
 

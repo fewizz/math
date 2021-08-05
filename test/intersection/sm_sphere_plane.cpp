@@ -1,5 +1,6 @@
 #include "math/intersection/sm_sphere_plane.hpp"
 #include <glm/vec3.hpp>
+#include <glm/geometric.hpp>
 #include <cassert>
 
 int main() {
@@ -14,9 +15,11 @@ int main() {
 	math::sm_sphere_plane_intersection i{
 		s,
 		math::plane_by_normal_and_distance_to_center {
-			glm::vec3{0,-1,0}, 10
+			glm::vec3{0,-1,0}, 10.0F
 		}
 	};
+
+	static_assert(std::is_same_v<math::common_element_type<decltype(i.position())>, float>);
 	assert(i.sphere_distance() == 9.0);
 	assert(i.position() == pos);
 
