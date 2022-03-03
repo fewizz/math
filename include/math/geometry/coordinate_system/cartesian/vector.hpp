@@ -21,7 +21,7 @@ namespace math::geometry::cartesian {
 			Type result{};
 
 			for(nuint i = 0; i < Size; ++i) {
-				result += this->operator [] (i) * other[i];
+				result += (*this)[i] * other[i];
 			}
 
 			return result;

@@ -2,8 +2,7 @@
 
 namespace math {
 
-	template<typename Type>
-	Type square_root(Type val) {
+	inline double square_root(double val) {
 		return __builtin_sqrt(val);
 	}
 
