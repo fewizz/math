@@ -1,8 +1,8 @@
 #pragma once
 
 #include <core/array.hpp>
-#include <core/range/accumulate.hpp>
-#include <core/range/transform.hpp>
+#include <core/accumulate.hpp>
+#include <core/transform.hpp>
 
 #include "../../vector.hpp"
 #include "../../../square_root.hpp"

@@ -1,20 +1,12 @@
 #pragma once
 
+#include <core/array.hpp>
 #include <core/integer.hpp>
 
 namespace math {
 
 	template<typename Type, nuint Size>
-	struct vector {
-		Type m_storage[Size];
-
-		constexpr auto& operator [] (nuint index) {
-			return m_storage[index];
-		}
-
-		constexpr auto& operator [] (nuint index) const {
-			return m_storage[index];
-		}
+	struct vector : array<Type, Size> {
 
 		constexpr bool
 		operator == (const vector& other) const {
@@ -37,10 +29,24 @@ namespace math {
 		}
 
 		constexpr vector& operator *= (Type v) {
-			for(auto& v0 : m_storage) v0 *= v;
+			for(auto& v0 : *this) v0 *= v;
 			return *this;
 		}
 
 	};
 
-}
+} // math
+
+#include <core/std/tuple_size.hpp>
+
+template<typename Type, nuint Size>
+struct std::tuple_size<math::vector<Type, Size>> {
+	static constexpr nuint value = Size;
+};
+
+#include <core/std/tuple_element.hpp>
+
+template<nuint Index, typename Type, nuint Size>
+struct std::tuple_element<Index, math::vector<Type, Size>> {
+	using type = Type;
+};

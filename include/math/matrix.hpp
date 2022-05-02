@@ -4,7 +4,7 @@
 #include <core/integer.hpp>
 #include <core/meta/values/first.hpp>
 #include <core/meta/values/permutations.hpp>
-#include <core/range/transform.hpp>
+#include <core/transform.hpp>
 #include <core/meta/values/permutations_parity.hpp>
 
 #include "vector.hpp"
