@@ -1,12 +1,14 @@
 #pragma once
 
-#include <core/array.hpp>
-#include <core/integer.hpp>
+#include <array.hpp>
+#include <integer.hpp>
 
 namespace math {
 
 	template<typename Type, nuint Size>
 	struct vector : array<Type, Size> {
+
+		using array<Type, Size>::array;
 
 		constexpr bool
 		operator == (const vector& other) const {
@@ -35,16 +37,24 @@ namespace math {
 
 	};
 
+	template<typename... Types>
+	requires(sizeof...(Types) == 1 || types_are_same<Types...>)
+	vector(Types&&...)
+		-> vector<
+			remove_reference<first_type<Types...>>,
+			sizeof...(Types)
+		>;
+
 } // math
 
-#include <core/std/tuple_size.hpp>
+#include <std/tuple_size.hpp>
 
 template<typename Type, nuint Size>
 struct std::tuple_size<math::vector<Type, Size>> {
 	static constexpr nuint value = Size;
 };
 
-#include <core/std/tuple_element.hpp>
+#include <std/tuple_element.hpp>
 
 template<nuint Index, typename Type, nuint Size>
 struct std::tuple_element<Index, math::vector<Type, Size>> {

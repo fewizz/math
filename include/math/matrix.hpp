@@ -1,8 +1,7 @@
 #pragma once
 
-#include <core/array.hpp>
-#include <core/integer.hpp>
-#include <core/meta/values/first.hpp>
+#include <array.hpp>
+#include <integer.hpp>
 #include <core/meta/values/permutations.hpp>
 #include <core/transform.hpp>
 #include <core/meta/values/permutations_parity.hpp>
