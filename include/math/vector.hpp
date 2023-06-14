@@ -19,6 +19,14 @@ namespace math {
 			return true;
 		}
 
+		constexpr bool
+		operator == (const Type& value) const {
+			for(nuint i = 0; i < Size; ++i) {
+				if((*this)[i] != value) return false;
+			}
+			return true;
+		}
+
 		constexpr auto operator + (Type v) const {
 			vector cpy { *this };
 			for(auto& v0 : cpy) v0 += v;
@@ -73,10 +81,20 @@ namespace math {
 		}
 
 		constexpr vector clamp(vector min, vector max) {
-			return {
-				number { (*this)[0] }.clamp(min[0], max[0]),
-				number { (*this)[1] }.clamp(min[1], max[1])
-			};
+			vector result { *this };
+			for(nuint i = 0; i < Size; ++i) {
+				result[i] = number { result[i] }.clamp(min[i], max[i]);
+			}
+			return result;
+		}
+
+		template<typename To>
+		constexpr vector<To, Size> cast() {
+			vector<To, Size> result;
+			for(nuint i = 0; i < Size; ++i) {
+				result = (To) (*this)[i];
+			}
+			return result;
 		}
 
 	};
