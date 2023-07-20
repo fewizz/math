@@ -80,7 +80,7 @@ namespace math {
 			return *this;
 		}
 
-		constexpr vector clamp(vector min, vector max) {
+		constexpr vector clamp(vector min, vector max) const {
 			vector result { *this };
 			for(nuint i = 0; i < Size; ++i) {
 				result[i] = number { result[i] }.clamp(min[i], max[i]);
@@ -89,10 +89,10 @@ namespace math {
 		}
 
 		template<typename To>
-		constexpr vector<To, Size> cast() {
+		constexpr vector<To, Size> cast() const {
 			vector<To, Size> result;
 			for(nuint i = 0; i < Size; ++i) {
-				result = (To) (*this)[i];
+				result[i] = (To) (*this)[i];
 			}
 			return result;
 		}
