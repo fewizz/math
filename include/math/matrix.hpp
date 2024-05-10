@@ -2,9 +2,8 @@
 
 #include <array.hpp>
 #include <integer.hpp>
-#include <core/meta/values/permutations.hpp>
-#include <core/transform.hpp>
-#include <core/meta/values/permutations_parity.hpp>
+#include <__values/permutations.hpp>
+#include <__values/permutations_parity.hpp>
 
 #include "vector.hpp"
 
@@ -84,15 +83,15 @@ namespace math {
 		constexpr Type determinant() const requires is_square {
 			using permutations = typename
 				indices::from<0>::to<Width>::template
-				pass_for_type<values::permutations>;
+				pass_for_type<__values::permutations>;
 			
 			Type determinant{};
 
 			[&]<typename... ValuesOfColumn, nuint... ValuesOfColumnIndices>
-			(types::of<ValuesOfColumn...>, indices::of<ValuesOfColumnIndices...>) {
+			(types<ValuesOfColumn...>, indices::of<ValuesOfColumnIndices...>) {
 				([&]<nuint... ColumnIndices, nuint... RowIndices>
 				(indices::of<ColumnIndices...>, indices::of<RowIndices...>) {
-					Type sign(values::permutations_parity::for_indices<ColumnIndices...> % 2);
+					Type sign(__values::permutations_parity::for_indices<ColumnIndices...> % 2);
 					sign = sign * Type(2) - Type(1);
 					sign *= Type(-1);
 
