@@ -25,8 +25,8 @@ namespace math {
 
 		constexpr bool
 		operator == (const matrix& other) const {
-			for(nuint r = 0; r < Height; ++r) {
-				if((*this)[r] != other[r]) return false;
+			for (nuint r = 0; r < Height; ++r) {
+				if ((*this)[r] != other[r]) return false;
 			}
 
 			return true;
@@ -35,7 +35,7 @@ namespace math {
 		constexpr matrix
 		operator + (Type v) {
 			matrix cpy{ *this };
-			for(auto& v0 : cpy.m_storage) v0 += v;
+			for (auto& v0 : cpy.m_storage) v0 += v;
 			return cpy;
 		}
 
@@ -43,7 +43,7 @@ namespace math {
 		operator * (Type s) const {
 			matrix result{ *this };
 
-			for(auto& r : result.m_storage) {
+			for (auto& r : result.m_storage) {
 				r *= s;
 			}
 
@@ -56,9 +56,9 @@ namespace math {
 		operator * (math::matrix<Type, OtherHeight, OtherWidth> other) const {
 			matrix<Type, Height, OtherWidth> result{};
 
-			for(nuint h = 0; h < Height; ++h) {
-				for(nuint w = 0; w < OtherWidth; ++w) {
-					for(nuint i = 0; i < Width; ++i) {
+			for (nuint h = 0; h < Height; ++h) {
+				for (nuint w = 0; w < OtherWidth; ++w) {
+					for (nuint i = 0; i < Width; ++i) {
 						result[h][w] += (*this)[h][i] * other[i][w];
 					}
 				}
@@ -71,8 +71,8 @@ namespace math {
 		transposed() const {
 			matrix<Type, Width, Height> result;
 
-			for(nuint r = 0; r < Height; ++r) {
-				for(nuint c = 0; c < Width; ++c) {
+			for (nuint r = 0; r < Height; ++r) {
+				for (nuint c = 0; c < Width; ++c) {
 					result[c][r] = (*this)[r][c];
 				}
 			}
@@ -107,16 +107,16 @@ namespace math {
 		minor(nuint Row, nuint Column) const {
 			matrix<Type, Height - 1, Width - 1> result;
 
-			for(nuint r = 0, r1 = 0; r < Height;) {
-				for(nuint c = 0, c1 = 0; c < Width;) {
-					if(r != Row && c != Column) {
+			for (nuint r = 0, r1 = 0; r < Height;) {
+				for (nuint c = 0, c1 = 0; c < Width;) {
+					if (r != Row && c != Column) {
 						result[r1][c1] = (*this)[r][c];
 						++c1;
 					}
 					++c;
 				}
 
-				if(r != Row) ++r1;
+				if (r != Row) ++r1;
 				++r;
 			}
 
@@ -134,8 +134,8 @@ namespace math {
 		cofactor() const {
 			matrix result;
 
-			for(nuint r = 0; r < Height; ++r) {
-				for(nuint c = 0; c < Width; ++c) {
+			for (nuint r = 0; r < Height; ++r) {
+				for (nuint c = 0; c < Width; ++c) {
 					result[r][c] = cofactor(r, c);
 				}
 			}
