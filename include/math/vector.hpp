@@ -11,6 +11,10 @@ namespace math {
 
 		using array<Type, Size>::array;
 
+		vector(vector<Type, 2> v01, Type v2) requires (Size == 3):
+			array<Type, Size>{ v01[0], v01[1], v2 }
+		{}
+
 		constexpr bool
 		operator == (const vector& other) const {
 			for(nuint i = 0; i < Size; ++i) {
