@@ -79,6 +79,14 @@ namespace math {
 			return cpy;
 		}
 
+		constexpr auto operator / (vector v) const {
+			vector cpy { *this };
+			for(nuint i = 0; i < Size; ++i) {
+				cpy[i] /= v[i];
+			}
+			return cpy;
+		}
+
 		constexpr vector& operator *= (Type v) {
 			for(auto& v0 : *this) v0 *= v;
 			return *this;
